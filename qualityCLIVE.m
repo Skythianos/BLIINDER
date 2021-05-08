@@ -42,7 +42,6 @@ for ii=1:length(Constants.Layers)
 end
 
 disp('Training and testing');
-numberOfSplits=100;
 PLCC =zeros(1,numberOfSplits);
 SROCC=zeros(1,numberOfSplits);
 for i=1:numberOfSplits
