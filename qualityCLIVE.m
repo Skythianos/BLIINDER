@@ -1,45 +1,45 @@
-% clear all
-% close all
-% 
-% load CLIVE.mat    % This mat file contains information about the database (KonIQ-10k)
-% 
-% Directory = '/home/domonkos/Desktop/QualityAssessment/Databases/CLIVE/ChallengeDB_release/ChallengeDB_release/Images';  % path to KonIQ-10k database 
-% numberOfImages = size(AllMOS_release,2);   % number of images in KonIQ-10k database
-% numberOfTrainImages = round( 0.8*numberOfImages );   % appx. 80% of images is used for training
-% numberOfSplits = 100;
-% 
-% j=1;
-% Constants.net = vgg16;    % alexnet, vgg16, vgg19
-% for i=2:size(Constants.net.Layers,1)-1
-%     tmp=Constants.net.Layers(i);
-%     if(contains(tmp.Name, 'drop'))
-%         
-%     else
-%         Constants.Layers{j}=tmp.Name;
-%         if(isprop(tmp,'Bias'))
-%             Constants.Lengths{j}=size(tmp.Bias,3);
-%         else
-%             Constants.Lengths{j}=Constants.Lengths{j-1};
-%         end
-%         j=j+1;
-%     end 
-% end
-% 
-% Features = cell(1, length(Constants.Layers));
-% 
-% disp('Feature extraction');
-% for ii=1:length(Constants.Layers)
-%     disp(ii);
-%     tmpFeatures = zeros(numberOfImages, 2*Constants.Lengths{ii});
-%     for i=1:numberOfImages
-%         if(mod(i,100)==0)
-%             disp(i);
-%         end
-%         imgDist          = imread( strcat(Directory, filesep, AllImages_release{i}) );
-%         tmpFeatures(i,:) = getDeepFeatures(imgDist, Constants, ii); 
-%     end 
-%     Features{ii} = tmpFeatures;
-% end
+clear all
+close all
+ 
+load CLIVE.mat    % This mat file contains information about the database (CLIVE)
+ 
+Directory = '/home/domonkos/Desktop/QualityAssessment/Databases/CLIVE/ChallengeDB_release/ChallengeDB_release/Images';  % path to CLIVE database 
+numberOfImages = size(AllMOS_release,2);   % number of images in CLIVE database
+numberOfTrainImages = round( 0.8*numberOfImages );   % appx. 80% of images is used for training
+numberOfSplits = 100;
+ 
+j=1;
+Constants.net = vgg16;    % alexnet, vgg16, vgg19
+for i=2:size(Constants.net.Layers,1)-1
+     tmp=Constants.net.Layers(i);
+     if(contains(tmp.Name, 'drop'))
+         
+     else
+         Constants.Layers{j}=tmp.Name;
+         if(isprop(tmp,'Bias'))
+             Constants.Lengths{j}=size(tmp.Bias,3);
+         else
+             Constants.Lengths{j}=Constants.Lengths{j-1};
+         end
+         j=j+1;
+     end 
+end
+ 
+Features = cell(1, length(Constants.Layers));
+
+disp('Feature extraction');
+for ii=1:length(Constants.Layers)
+     disp(ii);
+     tmpFeatures = zeros(numberOfImages, 2*Constants.Lengths{ii});
+     for i=1:numberOfImages
+         if(mod(i,100)==0)
+             disp(i);
+         end
+         imgDist          = imread( strcat(Directory, filesep, AllImages_release{i}) );
+         tmpFeatures(i,:) = getDeepFeatures(imgDist, Constants, ii); 
+     end 
+     Features{ii} = tmpFeatures;
+end
 
 disp('Training and testing');
 numberOfSplits=100;
